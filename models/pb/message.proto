@@ -1,0 +1,32 @@
+syntax = "proto3";
+package MSG;
+
+message Transaction{
+    string Hash=1;
+    string From=2;
+    string To=3;
+	double Value=4;
+	string FileID=5;
+	string Timestamp=6;
+	 int32 Type=7;
+	 int32 Status=8;
+}
+
+message Block{
+  int64     Number=1;
+  string	Hash=2;
+  string	Creator=3;
+  string	PrevHash=4;
+  string	Timestamp=5;
+  string    MerkleRoot=6;
+  repeated Transaction Txs=7;
+}
+
+message Account{
+ string Address=1;
+ int32	FileNumber=2;
+ double	Contribution=3;
+ double	ContributionFile=4;
+ double	ContributionTx=5 ;
+}
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文件列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+</head>
+<body>
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../jquery-3.4.1/jquery.min.js"></script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="create">购买</a>
+</script>
+
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+        var localTest = layui.sessionData('test');
+
+        table.render({
+            elem: '#test'
+            ,url:'http://'+localTest.address+'/http/file/list'
+            ,cols: [[
+                {field:'id', width:300, title: 'ID'}
+                ,{field:'creator', width:300, title: '创建者'}
+                ,{field:'create_time', width:180, title: '创建时间'}
+                ,{field:'owner', width:300, title: '当前拥有者'}
+                ,{field:'value', width:80, title: '价格'}
+                //,{field:'status', width:80, title: '状态'}
+                ,{width: 100, align:'center',title: '操作', toolbar: '#barDemo'}
+            ]]
+            ,page: false
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'create'){
+                layer.open({
+                    type: 2,
+                    title: '创建交易',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['1400px', '500px'],
+                    content:'../transfer/create.html?fileID='+data.id
+                });
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

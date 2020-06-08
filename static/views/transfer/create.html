@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>发起交易</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">发起交易</div>
+                <div class="layui-card-body">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">文件ID</label>
+                            <div class="layui-input-block">
+                                <input id="fileID" type="text" name="fileID" lay-verify="fileID" autocomplete="off" placeholder="请输入文件ID" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">报价</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="price" lay-verify="price" autocomplete="off" placeholder="请输入报价" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="layui-card">
+                    <div class="layui-card-header">创建结果</div>
+                    <div class="layui-card-body" id="create-transfer-result">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../jquery-3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+    layui.use(['form'], function(){
+
+        var form = layui.form
+        var fileID = getQueryVariable('fileID');
+        if (fileID!=false){
+            $("#fileID").val(fileID)
+        }
+        //自定义验证规则
+        form.verify({
+            fileID: function(value){
+                if(value.length < 1){
+                    return '文件ID不能为空';
+                }
+            }
+            ,price:function (value) {
+                if(value.length < 1){
+                    return '报价不能为空';
+                }
+                if(value < 0){
+                    return '报价不能负';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            var localTest = layui.sessionData('test');
+
+            $.post("http://"+localTest.address+"/http/transfer/create",data.field,function(result,status){
+                console.info(result)
+                var text = " <p >创建成功</p>" +
+                    "<p >交易Hash:     "+result.data+"</p>\n" +
+                    "<p >等待进块</p>"
+                $("#create-transfer-result").html(text)
+            });
+            return false;
+        });
+    })
+
+    function getQueryVariable(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+</script>
+</html>

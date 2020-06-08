@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>我的区块列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+</head>
+<body>
+
+<table class="layui-hide" id="test"></table>
+
+<script src="../../layuiadmin/layui/layui.js"></script>
+<script src="../../jquery-3.4.1/jquery.min.js"></script>
+<script>
+    var localTest
+    layui.use('table', function(){
+        var table = layui.table;
+        localTest = layui.sessionData('test');
+
+        table.render({
+            elem: '#test'
+            ,url:'http://'+localTest.address+'/http/blockChain/myBlock'
+            ,cols: [[
+                {field:'number', width:100, title: '高度'}
+                ,{field:'hash', width:300, title: '区块'}
+                ,{field:'prev_hash', width:300, title: '父区块'}
+                ,{field:'creator', width:300, title: '创建者'}
+                ,{field:'timestamp', width:200, title: '创建时间'}
+                ,{title:'操作', width:100, templet: '#viewTx'}
+            ]]
+            ,page: true
+        });
+    });
+
+    function viewTx(number) {
+        layer.open({
+            type: 2,
+            title: '查看交易',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['1400px', '500px'],
+            content:'transaction.html?blockNumber='+number
+        });
+    }
+</script>
+
+<script type="text/html" id="viewTx">
+    <a href="javascript:" class="layui-table-link" onclick="viewTx({{d.number}})">查看交易</a>
+</script>
+
+</body>
+</html>
